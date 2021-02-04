@@ -1,20 +1,31 @@
 package com.lchrislee.learnmorse.data
 
+enum class MorseCodeEntry {
+    Dit,
+    Dah,
+    InterCharacterGap,
+    LetterGap,
+    WordGap,
+}
+
 class MorseCodeTranslator {
 
     companion object {
-        val dit = "1"
-        val dah = "111"
-        val interCharacterGap = "0"
-        val letterGap = "000"
-        val wordGap = "0000000"
+        private const val dit = "1"
+        private const val dah = "111"
+        private const val interCharacterGap = "0"
+        private const val letterGap = "000"
+        private const val wordGap = "0000000"
 
-        val ditDisplay = "·"
-        val dahDisplay = "—"
-        val wordGapDisplay = " "
+        private const val ditDisplay = "·"
+        private const val dahDisplay = "—"
+        private const val letterGapDisplay = " "
+        private const val wordGapDisplay = "   "
     }
 
     private var codeToAlphanumeric = mutableMapOf<String, String>()
+    private var encoded = StringBuilder()
+    private var display = StringBuilder()
 
     init {
         codeToAlphanumeric[ditDisplay] = "e"
@@ -69,17 +80,42 @@ class MorseCodeTranslator {
         codeToAlphanumeric["$dahDisplay$dahDisplay$dahDisplay$dahDisplay$dahDisplay"] = "0"
     }
 
-    fun codeToAlphanumeric(code: String): String? = code.split(wordGapDisplay).map {
-        val output = codeToAlphanumeric.getOrDefault(it, "")
-        output
-    }.let { mappedList ->
-        val emptyPos = mappedList.find { it.isEmpty() }
-        return if (emptyPos == null) {
-            val outputStringBuilder = StringBuilder()
-            mappedList.forEach {outputStringBuilder.append(it) }
-            return outputStringBuilder.toString()
-        } else {
-            null
+    fun append(entry: MorseCodeEntry) {
+        when (entry) {
+            MorseCodeEntry.Dit -> { encoded.append(dit); display.append(ditDisplay) }
+            MorseCodeEntry.Dah -> { encoded.append(dah); display.append(dahDisplay) }
+            MorseCodeEntry.InterCharacterGap -> { encoded.append(interCharacterGap) }
+            MorseCodeEntry.LetterGap -> { encoded.append(letterGap); display.append(letterGapDisplay) }
+            MorseCodeEntry.WordGap -> { encoded.append(wordGap); display.append(wordGapDisplay) }
         }
+    }
+
+    fun displayString() = display.toString()
+
+    fun clear() {
+        encoded.clear()
+        display.clear()
+    }
+
+    fun translated() = codeToAlphanumeric(displayString())
+
+    private fun codeToAlphanumeric(code: String): String? {
+        val words = code.split(wordGapDisplay)
+        val outputString = StringBuilder()
+        words.forEach {word ->
+            val translatedLetters = word.split(letterGapDisplay).map {
+                val output = codeToAlphanumeric.getOrDefault(it, "")
+                output
+            }
+            val emptyPos = translatedLetters.find { it.isEmpty() }
+            if (emptyPos == null) {
+//                val outputStringBuilder = StringBuilder()
+                translatedLetters.forEach {outputString.append(it) }
+                outputString.append(" ")
+            } else {
+                return null
+            }
+        }
+        return outputString.toString()
     }
 }

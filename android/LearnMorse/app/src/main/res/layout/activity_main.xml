@@ -65,16 +65,23 @@
             android:layout_height="wrap_content"
             />
 
-        <Button
-            android:id="@+id/space"
-            android:text="letter gap"
-            android:layout_weight="1"
-            android:layout_margin="4dp"
-            android:layout_width="wrap_content"
-            android:layout_height="match_parent"
-            />
-
     </LinearLayout>
+
+    <Button
+        android:id="@+id/letterSpace"
+        android:text="letter gap"
+        android:layout_margin="4dp"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        />
+
+    <Button
+        android:id="@+id/wordSpace"
+        android:text="word gap"
+        android:layout_margin="4dp"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        />
 
     <Space
         android:layout_weight="1"
