@@ -49,7 +49,7 @@ class MainActivity : AppCompatActivity() {
     }
 
     private fun refreshInputDisplay() {
-        userInput. text = displayString
+        userInput.text = displayString
     }
 
     private fun clearDisplays() {
